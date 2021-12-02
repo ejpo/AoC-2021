@@ -6,6 +6,7 @@ def readDepths(filePath):
         depths = f.readlines()
     return depths
 
+#Process Individual depths
 def processDepthReadings(depthReadings):
     previousDepth = -1
     depthIncreases = 0
@@ -22,10 +23,26 @@ def processDepthReadings(depthReadings):
     
     print(depthIncreases)
 
+#Process Sum of Readings
+def processDepthReadingsSum(depthReadings):
+    previousSum = -1
+    sumIncreases = 0
+
+    for i in range(len(depthReadings)):
+        if i < len(depthReadings) - 2:
+            sum = int(depthReadings[i]) + int(depthReadings[i+1]) + int(depthReadings[i+2])
+            if sum > previousSum and previousSum != -1:
+                sumIncreases += 1
+            previousSum = sum
+        else:
+            break
+    
+    print(sumIncreases)
+
 def main() -> int:
     #Check Args
-    if len(sys.argv) == 1:
-        print("Please specify the path for the file of depths")
+    if len(sys.argv) <= 1:
+        print("Please specify the path for the file of depths and optionally set the second argument to 1 to process a moving sum of the next 3 depth readings")
         return 0
     elif not os.path.isfile(sys.argv[1]):
         print ("File path provided is not a file or does not exist")
@@ -34,7 +51,11 @@ def main() -> int:
         depthReadings = readDepths(sys.argv[1])
 
     #Process Depth Readings
-    processDepthReadings(depthReadings)
+    if  len(sys.argv) > 2 and int(sys.argv[2]) == 1:
+        print("hi")
+        processDepthReadingsSum(depthReadings)
+    else:
+        processDepthReadings(depthReadings)
 
     #Return OK to Sys.Exit
     return 0
